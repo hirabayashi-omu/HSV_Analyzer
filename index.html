@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSV Comprehensive Analyzer 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.4.2/chroma.min.js"></script>
+    <!-- Useful for color conversions -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Settings</h2>
+                <div class="toggle-container">
+                    <label for="themeToggle" style="font-size:0.8rem; color:var(--text-secondary);">白背景モード (印刷用)</label>
+                    <label class="switch">
+                        <input type="checkbox" id="themeToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            <!-- Manual Data Input -->
+            <div class="control-group">
+                <h3>Color Sensor Value<br>(溶液色 RGB)</h3>
+                <div class="input-grid">
+                    <div class="input-wrapper">
+                        <label for="inputR">R</label>
+                        <input type="number" id="inputR" min="0" max="255" value="255" class="color-input">
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="inputG">G</label>
+                        <input type="number" id="inputG" min="0" max="255" value="0" class="color-input">
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="inputB">B</label>
+                        <input type="number" id="inputB" min="0" max="255" value="0" class="color-input">
+                    </div>
+                </div>
+                <!-- Preview box -->
+                <div id="colorPreview" class="color-preview"></div>
+
+                <button id="addDataBtn" class="btn-primary">
+                    <span class="icon">＋</span> Add Data Point
+                </button>
+            </div>
+
+            <div class="divider-small"></div>
+
+            <div class="control-group">
+                <label>Test Data Generation</label>
+                <button id="anthocyaninBtn" class="btn-secondary" style="border-color: #a855f7; color: #d8b4fe;">
+                    <span class="icon">🧪</span> Anthocyanin (pH 0-14)
+                </button>
+            </div>
+
+            <div class="divider-small"></div>
+
+            <div class="control-group">
+                <label for="fixedS">背景彩度 (Map S)</label>
+                <div class="range-container">
+                    <input type="range" id="fixedS" min="0" max="1" value="1.0" step="0.01">
+                    <span id="fixedSVal" class="value-badge">1.00</span>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <button id="clearBtn" class="btn-secondary">
+                    <span class="icon">🗑️</span> Clear All Data
+                </button>
+            </div>
+
+            <div class="sidebar-footer">
+                <p>HSV Comprehensive Analyzer</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <h1>🌈 HSV色彩解析 <span class="subtitle">極座標プロット ＆ 確率密度分布</span></h1>
+                <p class="description">実験値のRGBを基に、色相環へのマッピングと統計的な分布密度を可視化します。</p>
+            </header>
+
+            <!-- Top Row: Polar Plot (Full Width) -->
+            <section class="grid-row top-row" style="grid-template-columns: 1fr;">
+                <div class="card chart-card">
+                    <div class="card-header">
+                        <h3>🎡 HSV極座標プロット</h3>
+                        <span class="card-meta">H=角度, V=半径</span>
+                    </div>
+                    <div id="polarPlot" class="plot-container"></div>
+                </div>
+            </section>
+
+            <!-- Middle Row: Data Table (Full Width) -->
+            <section class="grid-row full-row" style="grid-template-columns: 1fr;">
+                <div class="card table-card">
+                    <div class="card-header">
+                        <h3>📋 実験データ一覧</h3>
+                        <button id="exportCsvBtn" class="btn-micro">💾 CSV Export</button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Color</th>
+                                    <th>R</th>
+                                    <th>G</th>
+                                    <th>B</th>
+                                    <th>Hue (°)</th>
+                                    <th>Sat (%)</th>
+                                    <th>Observed λ (nm)</th>
+                                    <th>Absorbed λ (nm)</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data rows will be injected here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <div class="divider"></div>
+
+            <!-- Bottom Row: Distributions -->
+            <section class="bottom-section">
+                <h3>📈 確率密度分布 (Probability Density)</h3>
+                <div class="grid-row bottom-row">
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h4>観測波長 (nm) の分布</h4>
+                        </div>
+                        <div id="hueDistPlot" class="plot-container small-plot"></div>
+                    </div>
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h4>吸収波長 (nm) の分布</h4>
+                        </div>
+                        <div id="satDistPlot" class="plot-container small-plot"></div>
+                    </div>
+                </div>
+
+                <!-- New Row for Hue & Saturation -->
+                <div class="grid-row bottom-row" style="margin-top: 1rem;">
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h4>色相角 (Hue) の分布</h4>
+                        </div>
+                        <div id="hueAngleDistPlot" class="plot-container small-plot"></div>
+                    </div>
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h4>彩度 (Saturation) の分布</h4>
+                        </div>
+                        <div id="saturationDistPlot" class="plot-container small-plot"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
