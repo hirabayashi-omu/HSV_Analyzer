@@ -21,7 +21,8 @@ let state = {
     },
     currentSource: 'Input',
     currentImageId: null,
-    images: [] // Store captured image data {id, src, markers: []}
+    images: [], // Store captured image data {id, src, markers: []}
+    sortState: { key: null, dir: 'asc' }
 };
 
 // Utility: RGB to HSV
@@ -249,7 +250,11 @@ function renderPolar() {
             color: data.map(d => d.hex),
             size: data.map(d => (state.highlightedId && state.highlightedId.toString() === d.id.toString()) ? 22 : 14),
             line: {
-                color: data.map(d => (state.highlightedId && state.highlightedId.toString() === d.id.toString()) ? '#FFD700' : (isLight ? '#555' : 'white')),
+                color: data.map(d => {
+                    if (state.highlightedId && state.highlightedId.toString() === d.id.toString()) return '#FFD700'; // Highlight Gold
+                    if (d.id.toString().startsWith('Cap')) return '#00FF00'; // Capture Green
+                    return '#ffffff'; // Default White
+                }),
                 width: data.map(d => (state.highlightedId && state.highlightedId.toString() === d.id.toString()) ? 4 : 2)
             }
         },
@@ -469,12 +474,77 @@ function exportCSV() {
     });
     const csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n" + rows.join("\n");
     const link = document.createElement("a");
+    // Link CSV download
     link.href = encodeURI(csvContent);
     link.download = "hsv_experiment_data.csv";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
 }
+
+// Sort Data
+window.sortTable = function (key) {
+    const { sortState, data } = state;
+
+    // Toggle direction
+    if (sortState.key === key) {
+        sortState.dir = sortState.dir === 'asc' ? 'desc' : 'asc';
+    } else {
+        sortState.key = key;
+        sortState.dir = 'asc';
+    }
+
+    const dirVal = sortState.dir === 'asc' ? 1 : -1;
+
+    data.sort((a, b) => {
+        let valA, valB;
+
+        // Custom getters for special columns
+        if (key === 'obs') {
+            valA = calculateWavelength(a.h);
+            valB = calculateWavelength(b.h);
+        } else if (key === 'abs') {
+            valA = calculateWavelength((a.h + 180) % 360);
+            valB = calculateWavelength((b.h + 180) % 360);
+        } else if (key === 'id') { // Alphanumeric sort for ID
+            valA = a.id.toString();
+            valB = b.id.toString();
+            return valA.localeCompare(valB, undefined, { numeric: true, sensitivity: 'base' }) * dirVal;
+        } else {
+            valA = a[key];
+            valB = b[key];
+        }
+
+        if (valA < valB) return -1 * dirVal;
+        if (valA > valB) return 1 * dirVal;
+        return 0;
+    });
+
+    renderAll();
+    updateSortIcons();
+};
+
+function updateSortIcons() {
+    document.querySelectorAll('th.sortable').forEach(th => {
+        th.classList.remove('asc', 'desc');
+        if (th.dataset.sort === state.sortState.key) {
+            th.classList.add(state.sortState.dir);
+        }
+    });
+}
+
+// Init Sort Listeners (Called once or safe to recall)
+function initSortListeners() {
+    const headers = document.querySelectorAll('th.sortable');
+    headers.forEach(th => {
+        // Remove old listeners to be safe? 
+        // Simple way: just overwrite onclick or use a flag. 
+        // Here we rely on this being called once on load.
+        th.onclick = () => sortTable(th.dataset.sort);
+    });
+}
+
+// Add initSortListeners to DOMContentLoaded (below)}
 
 // Stats Helper
 function calculateStats(values) {
@@ -1061,6 +1131,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial Render
     if (typeof updatePreview === 'function') updatePreview();
     if (typeof renderAll === 'function') renderAll();
+
+    // Initialize Sort Listeners
+    initSortListeners();
 
     // Mobile Menu Toggle
     const menuToggle = document.getElementById('menuToggle');

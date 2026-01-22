@@ -22,7 +22,7 @@
             <button class="mobile-menu-toggle" id="menuToggle">☰</button>
             <span class="header-logo-area">HSV Analysis</span>
             <div class="sidebar-header">
-                <h2>Settings</h2>
+                <h2>設定</h2>
                 <div class="toggle-container">
                     <label for="themeToggle" style="font-size:0.8rem; color:var(--text-secondary);">白背景モード (印刷用)</label>
                     <label class="switch">
@@ -33,18 +33,19 @@
             </div>
             <!-- Manual Data Input -->
             <div class="control-group">
-                <h3>カラーセンサー値<br>(溶液色 RGB)</h3>
+                <h3>カラーセンサー値<br>(溶液色 RGB)<span class="help-icon" data-tooltip="カラーセンサー等で測定したRGB値を入力してください。">?</span>
+                </h3>
                 <div class="input-grid">
                     <div class="input-wrapper">
-                        <label for="inputR">R</label>
+                        <label for="inputR">R<span class="help-icon" data-tooltip="赤成分 (0-255)">?</span></label>
                         <input type="number" id="inputR" min="0" max="255" value="255" class="color-input">
                     </div>
                     <div class="input-wrapper">
-                        <label for="inputG">G</label>
+                        <label for="inputG">G<span class="help-icon" data-tooltip="緑成分 (0-255)">?</span></label>
                         <input type="number" id="inputG" min="0" max="255" value="0" class="color-input">
                     </div>
                     <div class="input-wrapper">
-                        <label for="inputB">B</label>
+                        <label for="inputB">B<span class="help-icon" data-tooltip="青成分 (0-255)">?</span></label>
                         <input type="number" id="inputB" min="0" max="255" value="0" class="color-input">
                     </div>
                 </div>
@@ -52,14 +53,15 @@
                 <div id="colorPreview" class="color-preview"></div>
 
                 <button id="addDataBtn" class="btn-primary">
-                    <span class="icon">＋</span> データ追加
+                    <span class="icon">＋</span> データ追加<span class="help-icon"
+                        data-tooltip="入力した色データをリストとプロットに追加します。">?</span>
                 </button>
             </div>
 
             <div class="divider-small"></div>
 
             <div class="control-group">
-                <h3>画像/カメラ入力（選択）</h3>
+                <h3>画像/カメラ入力（選択）<span class="help-icon" data-tooltip="写真やカメラ画像から色を抽出します。">?</span></h3>
                 <input type="file" id="imageInput" accept="image/*" capture="environment" style="display: none;">
                 <button id="uploadBtn" class="btn-secondary">
                     <span class="icon">📷</span> 画像アップロード / カメラ
@@ -83,7 +85,7 @@
             <div class="divider-small"></div>
 
             <div class="control-group">
-                <label>テストデータ生成</label>
+                <label>テストデータ生成<span class="help-icon" data-tooltip="実験シミュレーション用のサンプルデータを自動生成します。">?</span></label>
                 <select id="testDataSelect" class="input-select"
                     style="margin-bottom: 0.5rem; width: 100%; padding: 0.5rem;">
                     <option value="anthocyanin">アントシアニン (pH 0-14)</option>
@@ -103,7 +105,8 @@
             <div class="divider-small"></div>
 
             <div class="control-group">
-                <label for="fixedS">背景明度 (Map Value)</label>
+                <label for="fixedS">背景明度 (Map Value)<span class="help-icon"
+                        data-tooltip="背景の色相環マップの明度(V)を調整します。0で黒、1で最大明度になります。">?</span></label>
                 <div class="range-container">
                     <input type="range" id="fixedS" min="0" max="1" value="1.0" step="0.01">
                     <span id="fixedSVal" class="value-badge">1.00</span>
@@ -124,7 +127,7 @@
         <!-- Main Content -->
         <main class="main-content">
             <header class="header">
-                <h1>🌈 HSV色彩解析 <span class="subtitle">極座標プロット ＆ 確率密度分布</span></h1>
+                <h1>🌈 呈色反応のHSVによるデジタル解析</h1>
                 <p class="description">実験値のRGBを基に、色相環へのマッピングと統計的な分布密度を可視化します。</p>
             </header>
 
@@ -132,7 +135,9 @@
             <section class="grid-row top-row" style="grid-template-columns: 1fr;">
                 <div class="card chart-card">
                     <div class="card-header">
-                        <h3>🎡 HSV極座標プロット</h3>
+                        <h3>🎡 HSV極座標プロット<span class="help-icon bottom"
+                                data-tooltip="色相(H)を角度、彩度(S)を半径とした極座標プロットです。">?</span>
+                        </h3>
                         <span class="card-meta">H=角度, S=半径 (Sat)</span>
                     </div>
                     <div id="polarPlot" class="plot-container"></div>
@@ -143,22 +148,23 @@
             <section class="grid-row full-row" style="grid-template-columns: 1fr;">
                 <div class="card table-card">
                     <div class="card-header">
-                        <h3>📋 実験データ一覧</h3>
+                        <h3>📋 実験データ一覧<span class="help-icon bottom"
+                                data-tooltip="追加されたデータの詳細一覧です。IDとRGB値以外は自動計算されます。">?</span></h3>
                         <button id="exportCsvBtn" class="btn-micro">💾 CSV Export</button>
                     </div>
                     <div class="table-wrapper">
                         <table id="dataTable">
                             <thead>
                                 <tr>
-                                    <th>No</th>
-                                    <th>Color</th>
-                                    <th>R</th>
-                                    <th>G</th>
-                                    <th>B</th>
-                                    <th>Hue (°)</th>
-                                    <th>Sat (%)</th>
-                                    <th>Observed λ (nm)</th>
-                                    <th>Absorbed λ (nm)</th>
+                                    <th data-sort="id" class="sortable">No</th>
+                                    <th data-sort="hex" class="sortable">Color</th>
+                                    <th data-sort="r" class="sortable">R</th>
+                                    <th data-sort="g" class="sortable">G</th>
+                                    <th data-sort="b" class="sortable">B</th>
+                                    <th data-sort="h" class="sortable">Hue (°)</th>
+                                    <th data-sort="s" class="sortable">Sat (%)</th>
+                                    <th data-sort="obs" class="sortable">Observed λ (nm)</th>
+                                    <th data-sort="abs" class="sortable">Absorbed λ (nm)</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -174,17 +180,20 @@
 
             <!-- Bottom Row: Distributions -->
             <section class="bottom-section">
-                <h3>📈 確率密度分布 (Probability Density)</h3>
+                <h3>📈 確率密度分布 (Probability Density)<span class="help-icon bottom"
+                        data-tooltip="各パラメータのデータのばらつきを確率密度として表示します。">?</span></h3>
                 <div class="grid-row bottom-row">
                     <div class="card chart-card">
                         <div class="card-header">
-                            <h4>観測波長 (nm) の分布</h4>
+                            <h4>観測波長 (nm) の分布<span class="help-icon bottom" data-tooltip="色相から推定される主波長の分布です。">?</span>
+                            </h4>
                         </div>
                         <div id="hueDistPlot" class="plot-container small-plot"></div>
                     </div>
                     <div class="card chart-card">
                         <div class="card-header">
-                            <h4>吸収波長 (nm) の分布</h4>
+                            <h4>吸収波長 (nm) の分布<span class="help-icon bottom" data-tooltip="補色関係にある吸収波長の分布です。">?</span>
+                            </h4>
                         </div>
                         <div id="satDistPlot" class="plot-container small-plot"></div>
                     </div>
@@ -194,13 +203,16 @@
                 <div class="grid-row bottom-row" style="margin-top: 1rem;">
                     <div class="card chart-card">
                         <div class="card-header">
-                            <h4>色相角 (Hue) の分布</h4>
+                            <h4>色相角 (Hue) の分布<span class="help-icon bottom"
+                                    data-tooltip="色相環上の角度(0-360°)の分布です。">?</span></h4>
                         </div>
                         <div id="hueAngleDistPlot" class="plot-container small-plot"></div>
                     </div>
                     <div class="card chart-card">
                         <div class="card-header">
-                            <h4>彩度 (Saturation) の分布</h4>
+                            <h4>彩度 (Saturation) の分布<span class="help-icon bottom"
+                                    data-tooltip="色の鮮やかさ(0-100%)の分布です。">?</span>
+                            </h4>
                         </div>
                         <div id="saturationDistPlot" class="plot-container small-plot"></div>
                     </div>

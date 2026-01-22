@@ -256,6 +256,36 @@ th {
     font-weight: 500;
 }
 
+th.sortable {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    padding-right: 1.5rem;
+    /* Space for arrow */
+}
+
+th.sortable:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+th.sortable::after {
+    content: '⇅';
+    position: absolute;
+    right: 8px;
+    opacity: 0.3;
+    font-size: 0.8rem;
+}
+
+th.sortable.asc::after {
+    content: '▲';
+    opacity: 1;
+}
+
+th.sortable.desc::after {
+    content: '▼';
+    opacity: 1;
+}
+
 tr:hover {
     background: rgba(255, 255, 255, 0.02);
 }
@@ -306,13 +336,10 @@ tr:hover {
         overflow-y: auto;
     }
 
-    .sidebar {
-        width: 100%;
-        flex-direction: row;
-        align-items: center;
-        padding: 1rem;
-        border-right: none;
-        border-bottom: 1px solid var(--card-border);
+    /* .sidebar removed to prevent top-bar conversion */
+
+    .sidebar-footer {
+        display: none;
     }
 
     .sidebar-footer {
@@ -561,6 +588,126 @@ tr.highlighted-row {
     border-left: 4px solid #ffd700;
 }
 
-.light-mode tr.highlighted-row {
-    background-color: rgba(255, 215, 0, 0.3) !important;
+/* Help Icon Styles */
+.help-icon {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-color: #888;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 18px;
+    font-size: 12px;
+    cursor: help;
+    margin-left: 8px;
+    position: relative;
+    font-weight: bold;
+    vertical-align: middle;
+}
+
+.help-icon:hover {
+    background-color: var(--accent-color);
+}
+
+/* Tooltip (Speech Bubble) */
+.help-icon::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 135%;
+    /* Above the icon */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.4;
+    white-space: normal;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, top 0.2s;
+    z-index: 2000;
+    pointer-events: none;
+    width: max-content;
+    max-width: 220px;
+    text-align: left;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.help-icon:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Arrow for the bubble */
+.help-icon::before {
+    content: "";
+    position: absolute;
+    bottom: 115%;
+    /* Just below the bubble */
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s;
+    z-index: 2000;
+}
+
+.help-icon:hover::before {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Bottom tooltip modifier */
+.help-icon.bottom::after {
+    bottom: auto;
+    top: 135%;
+    /* Flip arrow direction logic if needed, or just position bubble below */
+}
+
+.help-icon.bottom::before {
+    bottom: auto;
+    /* Reset bottom */
+    top: 115%;
+    /* Position below icon */
+    border-color: transparent transparent #333 transparent;
+    /* Arrow points up */
+}
+
+.light-mode .help-icon.bottom::before {
+    border-color: transparent transparent #24292f transparent;
+}
+
+/* Sidebar specific tooltip overrides to prevent clipping */
+.sidebar .help-icon::after {
+    left: auto;
+    right: -10px;
+    transform: none;
+    /* Remove center alignment */
+    /* Ensure it doesn't exceed sidebar width visually */
+    white-space: normal;
+    width: 200px;
+    /* Fixed width for better wrapping in narrow bar */
+}
+
+.sidebar .help-icon::before {
+    left: auto;
+    right: 4px;
+    /* Align arrow with icon */
+    transform: none;
+}
+
+/* Light mode adjustments */
+.light-mode .help-icon::after {
+    background-color: #24292f;
+    color: white;
+}
+
+.light-mode .help-icon::before {
+    border-color: #24292f transparent transparent transparent;
 }

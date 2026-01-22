@@ -1,3 +1,12 @@
+/* Default: Hide mobile elements on desktop */
+.mobile-menu-toggle {
+    display: none;
+}
+
+.header-logo-area {
+    display: none;
+}
+
 /* Smartphone/Vertical Layout Fixes */
 @media (max-width: 768px) {
     .app-container {
@@ -7,52 +16,70 @@
     }
 
     .sidebar {
-        width: 100%;
-        flex-direction: column;
-        padding: 1.5rem;
-        gap: 1.5rem;
-        height: auto;
-        border-right: none;
-        border-bottom: 1px solid var(--card-border);
+        /* Off-canvas menu styles */
+        width: 250px;
+        /* Fixed width for menu */
+        position: fixed;
+        top: 0;
+        left: -250px;
+        /* Hidden off-screen left */
+        height: 100vh;
+        z-index: 2000;
+        background-color: var(--card-bg);
+        /* Use theme background */
+        border-right: 1px solid var(--card-border);
+        transition: left 0.3s ease-in-out;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+        padding: 1rem;
+        padding-top: 60px;
+        /* Space for internal close button or header */
+        overflow-y: auto;
 
-        /* Collapsible Logic */
-        max-height: 60px;
-        /* Header height (title only visible initially) */
-        overflow: hidden;
-        transition: max-height 0.3s ease-in-out;
-        position: relative;
-        padding-top: 50px;
-        /* Space for toggle button */
+        /* Reset stack layout props */
+        flex-direction: column;
+        border-bottom: none;
     }
 
     .sidebar.open {
-        max-height: 100vh;
-        /* Allow full expansion */
-        overflow-y: auto;
+        left: 0;
+        /* Slide in */
     }
 
-    /* Toggle Button */
+    /* Toggle Button - Fixed on screen */
     .mobile-menu-toggle {
         display: block;
-        position: absolute;
+        position: fixed;
         top: 10px;
-        right: 15px;
-        background: none;
+        left: 10px;
+        /* Left side */
+        right: auto;
+        background-color: var(--card-bg);
+        /* Add bg so it's visible over content */
         border: 1px solid var(--card-border);
         border-radius: 4px;
         font-size: 24px;
         cursor: pointer;
         padding: 4px 10px;
-        z-index: 101;
+        z-index: 2100;
+        /* Above sidebar */
         color: var(--text-color);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
 
     .header-logo-area {
-        position: absolute;
+        position: fixed;
         top: 15px;
-        left: 20px;
+        left: 60px;
+        /* Right of the toggle button */
         font-weight: bold;
         font-size: 1.1rem;
+        z-index: 2100;
+        background-color: var(--card-bg);
+        /* readable bg */
+        padding: 2px 5px;
+        border-radius: 4px;
+        display: block;
+        /* Ensure visible */
     }
 
     /* Hide redundant footer in mobile view to save space */
@@ -63,6 +90,8 @@
     /* ... Rest of layout ... */
     .main-content {
         padding: 1rem;
+        padding-top: 60px;
+        /* Space for fixed header/toggle */
         overflow: visible;
     }
 
@@ -91,21 +120,5 @@
 
     .header .subtitle {
         font-size: 1rem;
-    }
-}
-
-/* Ensure toggle button is hidden on desktop */
-.mobile-menu-toggle {
-    display: none;
-}
-
-.header-logo-area {
-    display: none;
-    /* Only for mobile header context */
-}
-
-@media (max-width: 768px) {
-    .header-logo-area {
-        display: block;
     }
 }
