@@ -17,31 +17,33 @@
 
     .sidebar {
         /* Off-canvas menu styles */
-        width: 250px;
+        width: 250px !important;
         /* Fixed width for menu */
-        position: fixed;
-        top: 0;
-        left: -250px;
+        position: fixed !important;
+        top: 0 !important;
+        left: -250px !important;
         /* Hidden off-screen left */
-        height: 100vh;
-        z-index: 2000;
-        background-color: var(--card-bg);
-        /* Use theme background */
-        border-right: 1px solid var(--card-border);
-        transition: left 0.3s ease-in-out;
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
-        padding: 1rem;
-        padding-top: 60px;
+        height: 100vh !important;
+        z-index: 2000 !important;
+        background-color: var(--sidebar-bg) !important;
+        /* Use solid sidebar bg */
+        border-right: 1px solid var(--card-border) !important;
+        transition: left 0.3s ease-in-out !important;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5) !important;
+        padding: 1rem !important;
+        padding-top: 60px !important;
         /* Space for internal close button or header */
-        overflow-y: auto;
+        overflow-y: auto !important;
 
         /* Reset stack layout props */
-        flex-direction: column;
-        border-bottom: none;
+        display: flex !important;
+        flex-direction: column !important;
+        border-bottom: none !important;
+        visibility: visible !important;
     }
 
     .sidebar.open {
-        left: 0;
+        left: 0 !important;
         /* Slide in */
     }
 
