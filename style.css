@@ -554,3 +554,13 @@ input:checked+.slider {
 input:checked+.slider:before {
     transform: translateX(20px);
 }
+
+/* Highlight Styles */
+tr.highlighted-row {
+    background-color: rgba(255, 255, 0, 0.2) !important;
+    border-left: 4px solid #ffd700;
+}
+
+.light-mode tr.highlighted-row {
+    background-color: rgba(255, 215, 0, 0.3) !important;
+}

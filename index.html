@@ -12,25 +12,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.4.2/chroma.min.js"></script>
     <!-- Useful for color conversions -->
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mobile.css">
 </head>
 
-<body>
+<body class="light-mode">
     <div class="app-container">
         <!-- Sidebar -->
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
+            <button class="mobile-menu-toggle" id="menuToggle">☰</button>
+            <span class="header-logo-area">HSV Analysis</span>
             <div class="sidebar-header">
                 <h2>Settings</h2>
                 <div class="toggle-container">
                     <label for="themeToggle" style="font-size:0.8rem; color:var(--text-secondary);">白背景モード (印刷用)</label>
                     <label class="switch">
-                        <input type="checkbox" id="themeToggle">
+                        <input type="checkbox" id="themeToggle" checked>
                         <span class="slider"></span>
                     </label>
                 </div>
             </div>
             <!-- Manual Data Input -->
             <div class="control-group">
-                <h3>Color Sensor Value<br>(溶液色 RGB)</h3>
+                <h3>カラーセンサー値<br>(溶液色 RGB)</h3>
                 <div class="input-grid">
                     <div class="input-wrapper">
                         <label for="inputR">R</label>
@@ -49,23 +52,58 @@
                 <div id="colorPreview" class="color-preview"></div>
 
                 <button id="addDataBtn" class="btn-primary">
-                    <span class="icon">＋</span> Add Data Point
+                    <span class="icon">＋</span> データ追加
                 </button>
             </div>
 
             <div class="divider-small"></div>
 
             <div class="control-group">
-                <label>Test Data Generation</label>
-                <button id="anthocyaninBtn" class="btn-secondary" style="border-color: #a855f7; color: #d8b4fe;">
-                    <span class="icon">🧪</span> Anthocyanin (pH 0-14)
+                <h3>画像/カメラ入力（選択）</h3>
+                <input type="file" id="imageInput" accept="image/*" capture="environment" style="display: none;">
+                <button id="uploadBtn" class="btn-secondary">
+                    <span class="icon">📷</span> 画像アップロード / カメラ
+                </button>
+                <div id="imageModal" class="modal"
+                    style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; align-items:center; justify-content:center; flex-direction:column;">
+                    <canvas id="imgCanvas"
+                        style="max-width:90%; max-height:80%; border:2px solid white; cursor:crosshair;"></canvas>
+                    <p style="color:white; margin-top:10px;">クリック/タップで色を抽出 (平均 10px)</p>
+                    <button id="closeModalBtn" class="btn-secondary"
+                        style="width:auto; margin-top:10px; background:white; color:black;">閉じる</button>
+                </div>
+
+                <!-- Captured Image List -->
+                <div id="capturedImageList"
+                    style="display:flex; gap:5px; overflow-x:auto; margin-top:10px; padding-bottom:5px;">
+                    <!-- Thumbnails will go here -->
+                </div>
+            </div>
+
+            <div class="divider-small"></div>
+
+            <div class="control-group">
+                <label>テストデータ生成</label>
+                <select id="testDataSelect" class="input-select"
+                    style="margin-bottom: 0.5rem; width: 100%; padding: 0.5rem;">
+                    <option value="anthocyanin">アントシアニン (pH 0-14)</option>
+                    <option value="mo">メチルオレンジ (pH 3.1 - 4.4)</option>
+                    <option value="mr">メチルレッド (pH 4.2 - 6.2)</option>
+                    <option value="bcp">ブロモクレゾールパープル (pH 5.2 - 6.8)</option>
+                    <option value="btb">BTB溶液 (pH 6.0 - 7.6)</option>
+                    <option value="pr">フェノールレッド (pH 6.8 - 8.4)</option>
+                    <option value="pp">フェノールフタレイン (pH 8.0 - 9.8)</option>
+                    <option value="dpd">DPD法 (残留塩素)</option>
+                </select>
+                <button id="generateBtn" class="btn-secondary" style="border-color: #a855f7; color: #d8b4fe;">
+                    <span class="icon">🧪</span> データ生成
                 </button>
             </div>
 
             <div class="divider-small"></div>
 
             <div class="control-group">
-                <label for="fixedS">背景彩度 (Map S)</label>
+                <label for="fixedS">背景明度 (Map Value)</label>
                 <div class="range-container">
                     <input type="range" id="fixedS" min="0" max="1" value="1.0" step="0.01">
                     <span id="fixedSVal" class="value-badge">1.00</span>
@@ -95,7 +133,7 @@
                 <div class="card chart-card">
                     <div class="card-header">
                         <h3>🎡 HSV極座標プロット</h3>
-                        <span class="card-meta">H=角度, V=半径</span>
+                        <span class="card-meta">H=角度, S=半径 (Sat)</span>
                     </div>
                     <div id="polarPlot" class="plot-container"></div>
                 </div>

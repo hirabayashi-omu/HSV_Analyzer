@@ -1,0 +1,111 @@
+/* Smartphone/Vertical Layout Fixes */
+@media (max-width: 768px) {
+    .app-container {
+        flex-direction: column;
+        height: auto;
+        overflow-y: auto;
+    }
+
+    .sidebar {
+        width: 100%;
+        flex-direction: column;
+        padding: 1.5rem;
+        gap: 1.5rem;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--card-border);
+
+        /* Collapsible Logic */
+        max-height: 60px;
+        /* Header height (title only visible initially) */
+        overflow: hidden;
+        transition: max-height 0.3s ease-in-out;
+        position: relative;
+        padding-top: 50px;
+        /* Space for toggle button */
+    }
+
+    .sidebar.open {
+        max-height: 100vh;
+        /* Allow full expansion */
+        overflow-y: auto;
+    }
+
+    /* Toggle Button */
+    .mobile-menu-toggle {
+        display: block;
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        background: none;
+        border: 1px solid var(--card-border);
+        border-radius: 4px;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 4px 10px;
+        z-index: 101;
+        color: var(--text-color);
+    }
+
+    .header-logo-area {
+        position: absolute;
+        top: 15px;
+        left: 20px;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+
+    /* Hide redundant footer in mobile view to save space */
+    .sidebar-footer {
+        display: none;
+    }
+
+    /* ... Rest of layout ... */
+    .main-content {
+        padding: 1rem;
+        overflow: visible;
+    }
+
+    .grid-row {
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .top-row,
+    .bottom-row {
+        height: auto;
+        grid-template-columns: 1fr;
+    }
+
+    .plot-container {
+        height: 350px;
+    }
+
+    .input-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .header h1 {
+        font-size: 1.5rem;
+    }
+
+    .header .subtitle {
+        font-size: 1rem;
+    }
+}
+
+/* Ensure toggle button is hidden on desktop */
+.mobile-menu-toggle {
+    display: none;
+}
+
+.header-logo-area {
+    display: none;
+    /* Only for mobile header context */
+}
+
+@media (max-width: 768px) {
+    .header-logo-area {
+        display: block;
+    }
+}
