@@ -1175,19 +1175,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Mobile Menu Toggle
+    // Mobile Menu Toggle Logic
     const menuToggle = document.getElementById('menuToggle');
     const sidebar = document.getElementById('sidebar');
-    if (menuToggle && sidebar) {
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
-            // Toggle Icon
-            if (sidebar.classList.contains('open')) {
-                menuToggle.textContent = '✕';
-            } else {
-                menuToggle.textContent = '☰';
-            }
-        });
+    const overlay = document.getElementById('overlay');
+
+    function toggleSidebar(forceClose = false) {
+        if (!sidebar) return;
+
+        const isOpen = sidebar.classList.contains('open');
+        const shouldClose = forceClose || isOpen;
+
+        if (shouldClose) {
+            sidebar.classList.remove('open');
+            if (overlay) overlay.style.display = 'none';
+            if (menuToggle) menuToggle.textContent = '☰';
+        } else {
+            sidebar.classList.add('open');
+            if (overlay) overlay.style.display = 'block';
+            if (menuToggle) menuToggle.textContent = '✕';
+        }
+    }
+
+    if (menuToggle) {
+        menuToggle.addEventListener('click', () => toggleSidebar());
+    }
+
+    if (overlay) {
+        overlay.addEventListener('click', () => toggleSidebar(true));
     }
 });
-
