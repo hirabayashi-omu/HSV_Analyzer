@@ -489,19 +489,21 @@ function exportCSV() {
         alert("No data to export.");
         return;
     }
-    const headers = ["No", "R", "G", "B", "Hue", "Saturation", "Observed Lambda (nm)", "Absorbed Lambda (nm)", "Hex"];
+    const headers = ["No", "R", "G", "B", "Hue", "Saturation", "Value", "Observed Lambda (nm)", "Absorbed Lambda (nm)", "Hex"];
     const rows = state.data.map(d => {
         const obsLambda = calculateWavelength(d.h);
         const absLambda = calculateWavelength((d.h + 180) % 360);
         return [
-            d.id, d.r, d.g, d.b, d.h.toFixed(2), (d.s * 100).toFixed(2),
+            d.id, d.r, d.g, d.b, d.h.toFixed(2), (d.s * 100).toFixed(2), d.v.toFixed(3),
             obsLambda || "", absLambda || "", d.hex
         ].join(",");
     });
-    const csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n" + rows.join("\n");
+    const csvString = headers.join(",") + "\n" + rows.join("\n");
+    const bom = "\uFEFF"; // Add BOM for Excel compatibility
+    const csvContent = "data:text/csv;charset=utf-8," + encodeURIComponent(bom + csvString);
     const link = document.createElement("a");
     // Link CSV download
-    link.href = encodeURI(csvContent);
+    link.href = csvContent;
     link.download = "hsv_experiment_data.csv";
     document.body.appendChild(link);
     link.click();
