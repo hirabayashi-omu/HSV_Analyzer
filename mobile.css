@@ -1,8 +1,22 @@
-/* Default: Hide mobile elements on desktop (unless is-mobile is active) */
+/* Toggle Button Global (Visible on Desktop too) */
 .mobile-menu-toggle {
-    display: none;
+    display: block;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 4px 10px;
+    z-index: 2500;
+    /* Highest */
+    color: var(--text-color);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
+/* Adjust header logo if needed */
 .header-logo-area {
     display: none;
 }

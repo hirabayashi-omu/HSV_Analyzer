@@ -44,6 +44,12 @@ body {
     flex-direction: column;
     gap: 2rem;
     z-index: 10;
+    transition: transform 0.3s ease, width 0.3s ease, margin-left 0.3s ease;
+}
+
+.sidebar.closed {
+    margin-left: -320px;
+    /* Hide sidebar */
 }
 
 .sidebar-header h2 {
