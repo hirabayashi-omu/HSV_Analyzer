@@ -22,7 +22,8 @@ let state = {
     currentSource: 'Input',
     currentImageId: null,
     images: [], // Store captured image data {id, src, markers: []}
-    sortState: { key: null, dir: 'asc' }
+    sortState: { key: null, dir: 'asc' },
+    layoutMode: 'Auto' // Auto, Mobile, PC
 };
 
 // Utility: RGB to HSV
@@ -131,6 +132,26 @@ function updatePreview() {
     colorPreview.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
 }
 
+// Layout Management
+function updateLayout() {
+    const mode = state.layoutMode;
+    const body = document.body;
+
+    if (mode === 'Mobile') {
+        body.classList.add('is-mobile');
+    } else if (mode === 'PC') {
+        body.classList.remove('is-mobile');
+    } else {
+        // Auto: simple width check
+        if (window.innerWidth <= 768) {
+            body.classList.add('is-mobile');
+        } else {
+            body.classList.remove('is-mobile');
+        }
+    }
+}
+
+// Background Generation
 // Helper: Generate HSV Gradient Image (DataURL)
 function generateGradientImage(fixedV, size = 400) {
     const canvas = document.createElement('canvas');
@@ -1134,6 +1155,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize Sort Listeners
     initSortListeners();
+
+    // Layout Init
+    updateLayout();
+    window.addEventListener('resize', updateLayout);
+    const layoutRadios = document.querySelectorAll('input[name="layoutMode"]');
+    layoutRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            state.layoutMode = e.target.value;
+            updateLayout();
+            // Also force sidebar open/close reset?
+            // If switching to PC, ensure sidebar is visible (mobile menu toggle hides it offscreen potentially)
+            // Actually, mobile css hides it. PC styles show it.
+            // But if sidebar had 'open' class maybe remove it?
+            if (e.target.value !== 'Mobile') {
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar) sidebar.classList.remove('open');
+            }
+        });
+    });
 
     // Mobile Menu Toggle
     const menuToggle = document.getElementById('menuToggle');

@@ -1,4 +1,4 @@
-/* Default: Hide mobile elements on desktop */
+/* Default: Hide mobile elements on desktop (unless is-mobile is active) */
 .mobile-menu-toggle {
     display: none;
 }
@@ -7,120 +7,103 @@
     display: none;
 }
 
-/* Smartphone/Vertical Layout Fixes */
-@media (max-width: 768px) {
-    .app-container {
-        flex-direction: column;
-        height: auto;
-        overflow-y: auto;
-    }
+/* Smartphone Mode (Activated by .is-mobile class on body) */
+body.is-mobile .mobile-menu-toggle {
+    display: block;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    right: auto;
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 4px 10px;
+    z-index: 2100;
+    color: var(--text-color);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
 
-    .sidebar {
-        /* Off-canvas menu styles */
-        width: 250px !important;
-        /* Fixed width for menu */
-        position: fixed !important;
-        top: 0 !important;
-        left: -250px !important;
-        /* Hidden off-screen left */
-        height: 100vh !important;
-        z-index: 2000 !important;
-        background-color: var(--sidebar-bg) !important;
-        /* Use solid sidebar bg */
-        border-right: 1px solid var(--card-border) !important;
-        transition: left 0.3s ease-in-out !important;
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5) !important;
-        padding: 1rem !important;
-        padding-top: 60px !important;
-        /* Space for internal close button or header */
-        overflow-y: auto !important;
+body.is-mobile .header-logo-area {
+    display: block;
+    position: fixed;
+    top: 15px;
+    left: 60px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    z-index: 2100;
+    background-color: var(--card-bg);
+    padding: 2px 5px;
+    border-radius: 4px;
+}
 
-        /* Reset stack layout props */
-        display: flex !important;
-        flex-direction: column !important;
-        border-bottom: none !important;
-        visibility: visible !important;
-    }
+body.is-mobile .app-container {
+    flex-direction: column;
+    height: auto;
+    overflow-y: auto;
+}
 
-    .sidebar.open {
-        left: 0 !important;
-        /* Slide in */
-    }
+body.is-mobile .sidebar {
+    /* Off-canvas menu styles */
+    width: 250px !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: -250px !important;
+    height: 100vh !important;
+    z-index: 2000 !important;
+    background-color: var(--sidebar-bg) !important;
+    border-right: 1px solid var(--card-border) !important;
+    transition: left 0.3s ease-in-out !important;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5) !important;
+    padding: 1rem !important;
+    padding-top: 60px !important;
+    overflow-y: auto !important;
 
-    /* Toggle Button - Fixed on screen */
-    .mobile-menu-toggle {
-        display: block;
-        position: fixed;
-        top: 10px;
-        left: 10px;
-        /* Left side */
-        right: auto;
-        background-color: var(--card-bg);
-        /* Add bg so it's visible over content */
-        border: 1px solid var(--card-border);
-        border-radius: 4px;
-        font-size: 24px;
-        cursor: pointer;
-        padding: 4px 10px;
-        z-index: 2100;
-        /* Above sidebar */
-        color: var(--text-color);
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
+    /* Reset stack layout props */
+    display: flex !important;
+    flex-direction: column !important;
+    border-bottom: none !important;
+    visibility: visible !important;
+}
 
-    .header-logo-area {
-        position: fixed;
-        top: 15px;
-        left: 60px;
-        /* Right of the toggle button */
-        font-weight: bold;
-        font-size: 1.1rem;
-        z-index: 2100;
-        background-color: var(--card-bg);
-        /* readable bg */
-        padding: 2px 5px;
-        border-radius: 4px;
-        display: block;
-        /* Ensure visible */
-    }
+body.is-mobile .sidebar.open {
+    left: 0 !important;
+}
 
-    /* Hide redundant footer in mobile view to save space */
-    .sidebar-footer {
-        display: none;
-    }
+body.is-mobile .sidebar-footer {
+    display: none;
+}
 
-    /* ... Rest of layout ... */
-    .main-content {
-        padding: 1rem;
-        padding-top: 60px;
-        /* Space for fixed header/toggle */
-        overflow: visible;
-    }
+body.is-mobile .main-content {
+    padding: 1rem;
+    padding-top: 60px;
+    overflow: visible;
+}
 
-    .grid-row {
-        gap: 1rem;
-        margin-bottom: 1rem;
-    }
+body.is-mobile .grid-row {
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
 
-    .top-row,
-    .bottom-row {
-        height: auto;
-        grid-template-columns: 1fr;
-    }
+body.is-mobile .top-row,
+body.is-mobile .bottom-row {
+    height: auto;
+    grid-template-columns: 1fr;
+}
 
-    .plot-container {
-        height: 350px;
-    }
+body.is-mobile .plot-container {
+    height: 350px;
+}
 
-    .input-grid {
-        grid-template-columns: 1fr 1fr 1fr;
-    }
+body.is-mobile .input-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+}
 
-    .header h1 {
-        font-size: 1.5rem;
-    }
+body.is-mobile .header h1 {
+    font-size: 1.5rem;
+}
 
-    .header .subtitle {
-        font-size: 1rem;
-    }
+body.is-mobile .header .subtitle {
+    font-size: 1rem;
 }

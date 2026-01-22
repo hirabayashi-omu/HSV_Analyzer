@@ -702,12 +702,17 @@ tr.highlighted-row {
     transform: none;
 }
 
-/* Light mode adjustments */
-.light-mode .help-icon::after {
-    background-color: #24292f;
-    color: white;
+
+.radio-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
 }
 
-.light-mode .help-icon::before {
-    border-color: #24292f transparent transparent transparent;
+.radio-label input {
+    cursor: pointer;
+    accent-color: var(--accent-color);
 }
