@@ -143,7 +143,7 @@ function updateLayout() {
         body.classList.remove('is-mobile');
     } else {
         // Auto: simple width check
-        if (window.innerWidth <= 768) {
+        if (window.innerWidth <= 1024) {
             body.classList.add('is-mobile');
         } else {
             body.classList.remove('is-mobile');
