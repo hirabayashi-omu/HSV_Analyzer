@@ -342,20 +342,12 @@ tr:hover {
         display: none;
     }
 
-    .sidebar-footer {
-        display: none;
-    }
-
     .main-content {
         height: auto;
         overflow: visible;
     }
 
-    .top-row,
-    .bottom-row {
-        grid-template-columns: 1fr;
-        height: auto;
-    }
+    /* .top-row, .bottom-row styles removed to allow side-by-side on tablets */
 
     .chart-card,
     .table-card {
