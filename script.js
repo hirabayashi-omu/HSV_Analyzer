@@ -1181,16 +1181,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById('overlay');
 
     function toggleSidebar(forceClose = false) {
-        if (!sidebar) return;
+        console.log("Toggle Sidebar called. Force:", forceClose);
+        if (!sidebar) {
+            console.error("Sidebar element not found!");
+            return;
+        }
 
         const isOpen = sidebar.classList.contains('open');
         const shouldClose = forceClose || isOpen;
 
         if (shouldClose) {
+            console.log("Closing sidebar");
             sidebar.classList.remove('open');
             if (overlay) overlay.style.display = 'none';
             if (menuToggle) menuToggle.textContent = '☰';
         } else {
+            console.log("Opening sidebar");
             sidebar.classList.add('open');
             if (overlay) overlay.style.display = 'block';
             if (menuToggle) menuToggle.textContent = '✕';
@@ -1198,10 +1204,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (menuToggle) {
-        menuToggle.addEventListener('click', () => toggleSidebar());
+        // Support both click and touch to ensure responsiveness
+        const handleToggle = (e) => {
+            e.preventDefault(); // Prevent ghost clicks
+            e.stopPropagation();
+            toggleSidebar();
+        };
+        menuToggle.addEventListener('click', handleToggle);
+        menuToggle.addEventListener('touchstart', handleToggle, { passive: false });
+        console.log("Menu Toggle Listener Attached");
+    } else {
+        console.error("Menu Toggle Button Not Found");
     }
 
     if (overlay) {
         overlay.addEventListener('click', () => toggleSidebar(true));
+        overlay.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            toggleSidebar(true);
+        }, { passive: false });
     }
 });
