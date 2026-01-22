@@ -38,6 +38,11 @@ body.is-mobile .header-logo-area {
     border-radius: 4px;
 }
 
+body.is-mobile {
+    overflow: auto !important;
+    height: auto !important;
+}
+
 body.is-mobile .app-container {
     flex-direction: column;
     height: auto;
