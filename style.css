@@ -332,8 +332,8 @@ tr:hover {
 /* Responsive */
 @media (max-width: 1024px) {
     .app-container {
-        flex-direction: column;
-        overflow-y: auto;
+        /* Keep row layout for tablets to avoid "Top Menu" look.
+           Mobile mode (via .is-mobile class) will handle vertical stacking. */
     }
 
     /* .sidebar removed to prevent top-bar conversion */
